@@ -202,9 +202,40 @@ export default function ModulePage() {
                     {section.title}
                   </h2>
 
-                  <p style={{ color: '#333', lineHeight: 1.7, marginBottom: 0 }}>
-                    {section.content}
-                  </p>
+                  {(section.title === 'Applicazione' && section.mediaUrl) ? (
+                    <audio
+                      controls
+                      style={{ width: '100%', marginTop: 10 }}
+                    >
+                      <source src={section.mediaUrl} />
+                      Il tuo browser non supporta il player audio.
+                    </audio>
+                  ) : null}
+
+                  {(section.title === 'Schema' && section.mediaUrl) ? (
+                    <img
+                      src={section.mediaUrl}
+                      alt={`Schema del modulo ${module.title}`}
+                      style={{
+                        width: '100%',
+                        borderRadius: 12,
+                        marginTop: 10,
+                        display: 'block',
+                      }}
+                    />
+                  ) : null}
+
+                  {section.content ? (
+                    <p style={{ color: '#333', lineHeight: 1.7, marginBottom: 0, marginTop: 10 }}>
+                      {section.content}
+                    </p>
+                  ) : null}
+
+                  {!section.content && !section.mediaUrl ? (
+                    <p style={{ color: '#666', marginBottom: 0 }}>
+                      Nessun contenuto disponibile per questa sezione.
+                    </p>
+                  ) : null}
                 </div>
               ))}
             </section>

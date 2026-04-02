@@ -22,16 +22,16 @@ function slugify(text: string) {
 function getSectionGuide(sectionTitle: string) {
   const normalized = sectionTitle.trim().toLowerCase();
 
-  if (normalized === 'stimolo') {
+  if (normalized === 'focus') {
     return {
-      help: 'Lo stimolo attiva il processo di apprendimento. Non spiegare: poni una domanda, un problema o una situazione che metta in crisi e spinga a riflettere.',
-      example: 'Esempio: “Se l’AI risponde a tutto, qual è il ruolo del docente?”',
+      help: 'Il focus introduce il nucleo problematico della sezione. Deve attivare attenzione, domanda e orientamento verso il tema.',
+      example: 'Esempio: “Quale spazio resta al docente quando l’AI sembra in grado di spiegare tutto?”',
     };
   }
 
-  if (normalized === 'concetto') {
+  if (normalized === 'concept') {
     return {
-      help: 'Il concetto chiarisce il nucleo teorico della sezione. Qui puoi definire, inquadrare e dare struttura al tema.',
+      help: 'Il concept chiarisce il nucleo teorico del modulo. Qui definisci e inquadri il tema in modo sintetico ma solido.',
       example:
         'Esempio: “L’AI-supported learning è un setting in cui l’intelligenza artificiale supporta comprensione, confronto e riflessione critica.”',
     };
@@ -39,17 +39,17 @@ function getSectionGuide(sectionTitle: string) {
 
   if (normalized === 'applicazione') {
     return {
-      help: 'L’applicazione mostra come il concetto prende forma nella pratica. Qui descrivi un uso possibile, un’attività o una situazione reale.',
+      help: 'In Applicazione non inserisci testo, ma il link a un podcast o a una risorsa audio che renda fruibile la dimensione operativa del modulo.',
       example:
-        'Esempio: “Gli studenti rispondono prima senza AI e poi confrontano il proprio elaborato con quello generato dal sistema.”',
+        'Esempio: link diretto a un file mp3 o a una risorsa audio pubblica.',
     };
   }
 
   if (normalized === 'schema') {
     return {
-      help: 'Lo schema sintetizza il processo in passaggi chiari. Serve a rendere visibile la struttura operativa del modulo.',
+      help: 'In Schema non inserisci testo, ma il link a un’immagine o schema grafico (.jpg, .png, .webp) che sintetizzi visivamente il modulo.',
       example:
-        'Esempio: “1. Attivazione del compito · 2. Interazione con AI · 3. Confronto · 4. Riflessione finale”',
+        'Esempio: link a una immagine pubblica o a un file grafico salvato online.',
     };
   }
 
@@ -142,8 +142,8 @@ const colorOptions = [
 ];
 
 const sectionTypes = [
-  'Stimolo',
-  'Concetto',
+  'Focus',
+  'Concept',
   'Applicazione',
   'Schema',
   'Riflessione',
@@ -164,7 +164,9 @@ export default function NewModulePage() {
   const [showOnHome, setShowOnHome] = useState(false);
   const [youtubeUrl, setYoutubeUrl] = useState('');
 
-  const [sections, setSections] = useState([{ title: 'Stimolo', content: '' }]);
+  const [sections, setSections] = useState([
+    { title: 'Focus', content: '', mediaUrl: '' },
+  ]);
   const [prompts, setPrompts] = useState([{ text: '' }]);
 
   useEffect(() => {
@@ -199,21 +201,22 @@ export default function NewModulePage() {
     setSections(
       found.sections?.length
         ? found.sections.map((s) => ({
-            ...s,
-            title: s.title || 'Stimolo',
+            title: s.title || 'Focus',
+            content: s.content || '',
+            mediaUrl: s.mediaUrl || '',
           }))
-        : [{ title: 'Stimolo', content: '' }]
+        : [{ title: 'Focus', content: '', mediaUrl: '' }]
     );
     setPrompts(found.prompts?.length ? found.prompts : [{ text: '' }]);
   }, [editingSlug]);
 
   const addSection = () => {
-    setSections([...sections, { title: 'Stimolo', content: '' }]);
+    setSections([...sections, { title: 'Focus', content: '', mediaUrl: '' }]);
   };
 
   const updateSection = (
     index: number,
-    field: 'title' | 'content',
+    field: 'title' | 'content' | 'mediaUrl',
     value: string
   ) => {
     setSections((prev) =>
@@ -256,9 +259,18 @@ export default function NewModulePage() {
       showOnHome,
       youtubeUrl: youtubeUrl.trim(),
       prompts: prompts.filter((p) => p.text.trim() !== ''),
-      sections: sections.filter(
-        (s) => s.title.trim() !== '' || s.content.trim() !== ''
-      ),
+      sections: sections
+        .map((section) => ({
+          title: section.title,
+          content: section.content?.trim() || '',
+          mediaUrl: section.mediaUrl?.trim() || '',
+        }))
+        .filter((section) => {
+          if (section.title === 'Applicazione' || section.title === 'Schema') {
+            return section.mediaUrl !== '';
+          }
+          return section.content !== '';
+        }),
     };
 
     saveStoredModule(moduleData);
@@ -558,6 +570,8 @@ export default function NewModulePage() {
 
                 {sections.map((section, index) => {
                   const guide = getSectionGuide(section.title);
+                  const isMediaSection =
+                    section.title === 'Applicazione' || section.title === 'Schema';
 
                   return (
                     <div
@@ -596,20 +610,39 @@ export default function NewModulePage() {
                         </p>
                       )}
 
-                      <textarea
-                        value={section.content}
-                        onChange={(e) => updateSection(index, 'content', e.target.value)}
-                        placeholder="Contenuto della sezione..."
-                        rows={4}
-                        style={{
-                          width: '100%',
-                          padding: 10,
-                          borderRadius: 8,
-                          border: '1px solid #ccc',
-                          boxSizing: 'border-box',
-                          resize: 'vertical',
-                        }}
-                      />
+                      {isMediaSection ? (
+                        <input
+                          value={section.mediaUrl || ''}
+                          onChange={(e) => updateSection(index, 'mediaUrl', e.target.value)}
+                          placeholder={
+                            section.title === 'Applicazione'
+                              ? 'Incolla qui il link del podcast/audio'
+                              : 'Incolla qui il link dell’immagine/schema'
+                          }
+                          style={{
+                            width: '100%',
+                            padding: 10,
+                            borderRadius: 8,
+                            border: '1px solid #ccc',
+                            boxSizing: 'border-box',
+                          }}
+                        />
+                      ) : (
+                        <textarea
+                          value={section.content || ''}
+                          onChange={(e) => updateSection(index, 'content', e.target.value)}
+                          placeholder="Contenuto della sezione..."
+                          rows={4}
+                          style={{
+                            width: '100%',
+                            padding: 10,
+                            borderRadius: 8,
+                            border: '1px solid #ccc',
+                            boxSizing: 'border-box',
+                            resize: 'vertical',
+                          }}
+                        />
+                      )}
 
                       {guide && (
                         <p style={{ fontSize: 12, color: '#999', marginTop: 8 }}>
@@ -869,9 +902,16 @@ export default function NewModulePage() {
                   {sections.map((section, index) => (
                     <div key={index} style={{ marginBottom: 12 }}>
                       <strong>{section.title || 'Titolo sezione'}</strong>
-                      <p style={{ margin: '4px 0', color: '#333', lineHeight: 1.6 }}>
-                        {section.content || 'Contenuto della sezione'}
-                      </p>
+
+                      {(section.title === 'Applicazione' || section.title === 'Schema') ? (
+                        <p style={{ margin: '4px 0', color: '#666', lineHeight: 1.6 }}>
+                          {section.mediaUrl || 'Nessun media collegato'}
+                        </p>
+                      ) : (
+                        <p style={{ margin: '4px 0', color: '#333', lineHeight: 1.6 }}>
+                          {section.content || 'Contenuto della sezione'}
+                        </p>
+                      )}
                     </div>
                   ))}
                 </div>

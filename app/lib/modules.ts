@@ -10,7 +10,7 @@ export type UMindModule = {
   showOnHome?: boolean;
   youtubeUrl?: string;
   prompts?: { text: string }[];
-  sections?: { title: string; content: string }[];
+  sections?: { title: string; content?: string; mediaUrl?: string }[];
 };
 
 export const modules: UMindModule[] = [
@@ -42,24 +42,22 @@ export const modules: UMindModule[] = [
     ],
     sections: [
       {
-        title: 'Stimolo',
+        title: 'Focus',
         content:
           'Se l’intelligenza artificiale è in grado di fornire spiegazioni, esempi e feedback immediati, quale spazio resta al docente universitario? E in che modo cambia il ruolo dello studente nel processo di apprendimento?',
       },
       {
-        title: 'Concetto',
+        title: 'Concept',
         content:
           'L’uso dell’AI nella didattica universitaria non coincide con la sostituzione del docente né con l’automatizzazione dell’apprendimento. Si tratta piuttosto di costruire una mediazione pedagogica in cui l’intelligenza artificiale può supportare l’accesso ai contenuti, il confronto tra ipotesi, la generazione di esempi e la riflessione critica, mantenendo però centrale il ruolo interpretativo e progettuale del docente.',
       },
       {
         title: 'Applicazione',
-        content:
-          'Il docente può proporre agli studenti un compito iniziale senza AI, chiedendo una prima elaborazione autonoma. In un secondo momento, gli studenti interrogano un sistema generativo, confrontano la risposta ottenuta con la propria produzione e discutono differenze, limiti, opportunità e strategie di miglioramento. L’obiettivo non è ottenere una risposta rapida, ma rendere osservabile il processo di pensiero.',
+        mediaUrl: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3',
       },
       {
         title: 'Schema',
-        content:
-          '1. Attivazione del compito senza AI. 2. Produzione iniziale dello studente. 3. Interazione con il sistema AI. 4. Confronto tra risposta umana e risposta generata. 5. Discussione critica e rielaborazione finale.',
+        mediaUrl: 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=1200&q=80',
       },
       {
         title: 'Riflessione',
@@ -96,24 +94,22 @@ export const modules: UMindModule[] = [
     ],
     sections: [
       {
-        title: 'Stimolo',
+        title: 'Focus',
         content:
           'Se durante una lezione gli studenti ascoltano ma non intervengono, stanno davvero apprendendo? Quali condizioni rendono uno studente parte attiva del processo formativo?',
       },
       {
-        title: 'Concetto',
+        title: 'Concept',
         content:
           'L’apprendimento attivo si fonda sull’idea che la conoscenza non venga semplicemente trasmessa, ma costruita attraverso l’interazione, la partecipazione e l’elaborazione personale. Nella didattica universitaria questo implica un cambiamento di prospettiva: dalla centralità della spiegazione del docente alla progettazione di situazioni in cui lo studente agisce, riflette, discute e rielabora.',
       },
       {
         title: 'Applicazione',
-        content:
-          'Il docente può interrompere una spiegazione frontale e proporre una domanda aperta o un problema da discutere in piccoli gruppi. Gli studenti elaborano una risposta, la confrontano tra loro e poi la restituiscono in plenaria. In questo modo si attiva un processo di costruzione condivisa della conoscenza.',
+        mediaUrl: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3',
       },
       {
         title: 'Schema',
-        content:
-          '1. Introduzione del tema. 2. Attivazione degli studenti attraverso una domanda o un problema. 3. Lavoro individuale o in gruppo. 4. Condivisione e confronto. 5. Sintesi guidata dal docente.',
+        mediaUrl: 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&w=1200&q=80',
       },
       {
         title: 'Riflessione',

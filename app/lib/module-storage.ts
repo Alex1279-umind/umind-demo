@@ -12,7 +12,7 @@ export type StoredModule = {
   showOnHome?: boolean;
   youtubeUrl?: string;
   prompts?: { text: string }[];
-  sections?: { title: string; content: string }[];
+  sections?: { title: string; content?: string; mediaUrl?: string }[];
 };
 
 const STORAGE_KEY = 'u-mind-custom-modules';
