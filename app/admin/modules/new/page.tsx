@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
-import { useSearchParams } from 'next/navigation';
 import Navbar from '../../../components/Navbar';
 import Footer from '../../../components/Footer';
 import {
@@ -151,8 +150,7 @@ const sectionTypes = [
 ];
 
 export default function NewModulePage() {
-  const searchParams = useSearchParams();
-  const editingSlug = searchParams.get('slug');
+  const [editingSlug, setEditingSlug] = useState<string | null>(null);
   const isEditing = !!editingSlug;
 
   const [title, setTitle] = useState('');
@@ -168,6 +166,13 @@ export default function NewModulePage() {
 
   const [sections, setSections] = useState([{ title: 'Stimolo', content: '' }]);
   const [prompts, setPrompts] = useState([{ text: '' }]);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const params = new URLSearchParams(window.location.search);
+    const slugFromUrl = params.get('slug');
+    setEditingSlug(slugFromUrl);
+  }, []);
 
   useEffect(() => {
     if (!slugEditedManually) {
