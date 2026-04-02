@@ -55,10 +55,16 @@ export function getStoredModuleBySlug(slug: string): StoredModule | null {
 }
 
 export function getAllModules(): StoredModule[] {
-  if (typeof window === 'undefined') return defaultModules as StoredModule[];
+  const defaults = defaultModules as StoredModule[];
+
+  if (typeof window === 'undefined') return defaults;
 
   const stored = getStoredModules();
-  return [...(defaultModules as StoredModule[]), ...stored];
+
+  const storedSlugs = new Set(stored.map((module) => module.slug));
+  const filteredDefaults = defaults.filter((module) => !storedSlugs.has(module.slug));
+
+  return [...filteredDefaults, ...stored];
 }
 
 export function getVisibleModules(): StoredModule[] {
